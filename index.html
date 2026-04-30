@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daria Shevchenko — Photography</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bisque:#FFE4C4;--brown:#A0522D;--brown-light:#C4733A;
+  --brown-dark:#7A3B1E;--cream:#FFF8F0;--white:#FFFFFF;
+  --text-dark:#3D1F0E;--text-mid:#7A5C45;--text-light:#B8906F;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--text-dark);overflow-x:hidden;}
+
+/* default cursor */
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.1rem 3rem;
+  background:rgba(255,248,240,.97);
+  border-bottom:1px solid rgba(160,82,45,.13);
+  backdrop-filter:blur(20px);
+  box-shadow:0 2px 20px rgba(58,22,5,.04);
+  transition:padding .4s ease,box-shadow .4s ease;
+}
+nav.scrolled{padding:.8rem 3rem;box-shadow:0 2px 24px rgba(58,22,5,.09);}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:300;letter-spacing:.08em;color:var(--brown-dark);text-decoration:none;transition:opacity .3s;white-space:nowrap;}
+.nav-logo span{font-style:italic;color:var(--brown-light);}
+.nav-logo:hover{opacity:.7;}
+
+/* Desktop nav links */
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{font-size:.7rem;font-weight:300;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;position:relative;transition:color .3s;white-space:nowrap;}
+.nav-links a::after{content:'';position:absolute;bottom:-2px;left:0;right:0;height:1px;background:var(--brown);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;}
+.nav-links a:hover{color:var(--brown);}
+.nav-links a:hover::after{transform:scaleX(1);}
+
+/* Mobile hamburger — hidden on desktop */
+.nav-hamburger{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;cursor:auto !important;}
+.nav-hamburger span{display:block;width:22px;height:1.5px;background:var(--brown-dark);transition:transform .3s,opacity .3s;}
+.nav-hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg);}
+.nav-hamburger.open span:nth-child(2){opacity:0;}
+.nav-hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg);}
+
+/* Mobile dropdown menu */
+.nav-mobile-menu{
+  display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:490;
+  background:rgba(255,248,240,.98);backdrop-filter:blur(20px);
+  flex-direction:column;align-items:center;justify-content:center;gap:2.5rem;
+  opacity:0;pointer-events:none;transition:opacity .35s ease;
+}
+.nav-mobile-menu.open{opacity:1;pointer-events:auto;}
+.nav-mobile-menu a{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;font-style:italic;color:var(--brown-dark);text-decoration:none;letter-spacing:.05em;transition:color .3s;}
+.nav-mobile-menu a:hover{color:var(--brown-light);}
+.nav-mobile-lang{display:flex;gap:1.2rem;margin-top:1rem;}
+.nav-mobile-lang button{background:none;border:1px solid rgba(160,82,45,.3);color:var(--text-mid);padding:.4rem .9rem;font-family:'Jost',sans-serif;font-size:.72rem;letter-spacing:.1em;cursor:auto !important;transition:all .3s;}
+.nav-mobile-lang button.active,.nav-mobile-lang button:hover{background:var(--brown);color:var(--white);border-color:var(--brown);}
+
+/* Lang switcher — desktop */
+.lang-wrap{position:relative;}
+.lang-btn{display:flex;align-items:center;gap:5px;background:transparent;border:1px solid rgba(160,82,45,.3);color:var(--text-mid);padding:.32rem .8rem;font-family:'Jost',sans-serif;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.lang-btn:hover{border-color:var(--brown);color:var(--brown);}
+.lang-arrow{font-size:.48rem;opacity:.7;transition:transform .3s;}
+.lang-wrap.open .lang-arrow{transform:rotate(180deg);}
+.lang-drop{position:absolute;top:calc(100% + 8px);right:0;background:var(--white);border:1px solid rgba(160,82,45,.18);min-width:148px;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .25s,transform .25s;z-index:600;box-shadow:0 12px 40px rgba(58,22,5,.1);}
+.lang-wrap.open .lang-drop{opacity:1;pointer-events:auto;transform:translateY(0);}
+.lang-opt{display:flex;align-items:center;gap:10px;padding:.6rem 1rem;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);cursor:pointer;transition:background .2s,color .2s;border-bottom:1px solid rgba(160,82,45,.06);}
+.lang-opt:last-child{border-bottom:none;}
+.lang-opt:hover{background:var(--bisque);color:var(--brown-dark);}
+.lang-opt.active{color:var(--brown);}
+
+/* Show hamburger on mobile, hide desktop links */
+@media(max-width:700px){
+  nav{padding:1rem 1.4rem;}
+  nav.scrolled{padding:.75rem 1.4rem;}
+  .nav-links{display:none;}
+  .nav-hamburger{display:flex;}
+  .nav-mobile-menu{display:flex;}
+}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:8rem 4rem 5rem 6rem;z-index:2;position:relative;}
+.hero-eyebrow{font-size:.68rem;letter-spacing:.35em;text-transform:uppercase;color:var(--brown-light);margin-bottom:1.8rem;opacity:0;transform:translateY(16px);animation:revealUp .9s .2s forwards ease;}
+.hero-title{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,6.5vw,6.5rem);font-weight:300;line-height:1.02;opacity:0;transform:translateY(24px);animation:revealUp 1s .4s forwards ease;}
+.hero-title em{font-style:italic;color:var(--brown-light);}
+.hero-sub{margin-top:1.8rem;font-size:.88rem;font-weight:200;color:var(--text-mid);line-height:1.9;max-width:340px;opacity:0;transform:translateY(16px);animation:revealUp .9s .65s forwards ease;}
+.hero-cta{margin-top:3rem;display:inline-flex;align-items:center;gap:1.2rem;opacity:0;transform:translateY(16px);animation:revealUp .9s .85s forwards ease;}
+.hero-line{width:48px;height:1px;background:var(--brown);flex-shrink:0;}
+.hero-cta a{font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--brown-dark);text-decoration:none;border-bottom:1px solid rgba(160,82,45,.4);padding-bottom:3px;transition:color .3s,letter-spacing .3s;}
+.hero-cta a:hover{color:var(--brown-light);letter-spacing:.28em;}
+.scroll-hint{display:flex;align-items:center;gap:14px;margin-top:3.5rem;opacity:0;animation:revealUp .9s 1.1s forwards ease;}
+.scroll-hint span{font-size:.6rem;letter-spacing:.28em;text-transform:uppercase;color:var(--text-light);}
+.scroll-bar{width:40px;height:1px;background:rgba(160,82,45,.3);position:relative;overflow:hidden;}
+.scroll-bar::after{content:'';position:absolute;left:-100%;top:0;width:100%;height:100%;background:var(--brown);animation:slideBar 2.2s 1.5s infinite ease;}
+
+/* Hero right */
+.hero-right{position:relative;overflow:hidden;background:var(--bisque);}
+.hero-art{position:absolute;inset:0;opacity:0;animation:fadeIn 1.4s .5s forwards ease;}
+.hero-art svg{width:100%;height:100%;}
+.hero-photos{position:absolute;inset:0;display:none;grid-template-columns:1.1fr .9fr;grid-template-rows:1.15fr .85fr;gap:3px;padding:3px;opacity:0;transition:opacity .8s ease;}
+.hero-photos.show{display:grid;}
+.hero-photos.loaded{opacity:1;}
+.hp-cell{overflow:hidden;background:var(--bisque);}
+.hp-cell:first-child{grid-row:span 2;}
+.hp-cell img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform 9s ease;}
+.hp-cell.ready img{transform:scale(1);}
+.hp-cell:hover img{transform:scale(1.03) !important;transition:transform .9s ease;}
+.hero-veil{position:absolute;bottom:0;left:0;right:0;height:140px;z-index:2;background:linear-gradient(to top,var(--cream),transparent);pointer-events:none;}
+
+/* ── REVEAL ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease,transform .8s ease;}
+.reveal.in{opacity:1;transform:translateY(0);}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:opacity .9s ease,transform .9s ease;}
+.reveal-left.in{opacity:1;transform:translateX(0);}
+
+/* ── SECTION HEADER ── */
+.sec-head{text-align:center;padding:7rem 2rem 3rem;}
+.sec-tag{font-size:.66rem;letter-spacing:.4em;text-transform:uppercase;color:var(--brown-light);margin-bottom:1.2rem;display:block;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.8rem,4.5vw,4.5rem);font-weight:300;line-height:1.08;}
+.sec-title em{font-style:italic;color:var(--brown-light);}
+
+/* ── GALLERY ── */
+.gallery-wrap{padding:0 1.5rem 3rem;}
+.masonry{columns:3;column-gap:12px;max-width:1500px;margin:0 auto;}
+.g-item{break-inside:avoid;margin-bottom:12px;position:relative;overflow:hidden;cursor:pointer;opacity:0;transform:translateY(36px) scale(.97);transition:opacity .75s ease,transform .75s ease;border-radius:2px;}
+.g-item.visible{opacity:1;transform:translateY(0) scale(1);}
+.g-item::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(90deg,var(--bisque) 25%,rgba(255,248,240,.7) 50%,var(--bisque) 75%);background-size:200% 100%;animation:shimmer 1.8s infinite;transition:opacity .5s;}
+.g-item.img-loaded::before{opacity:0;pointer-events:none;animation:none;}
+.g-item img{width:100%;display:block;transition:transform .9s cubic-bezier(.25,.46,.45,.94),filter .6s;filter:brightness(.95) saturate(.95);position:relative;z-index:1;}
+.g-item:hover img{transform:scale(1.07);filter:brightness(1.03) saturate(1.05);}
+.g-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(to top,rgba(36,10,2,.82) 0%,rgba(36,10,2,.2) 45%,transparent 70%);opacity:0;transition:opacity .5s ease;display:flex;align-items:flex-end;padding:1.2rem 1.3rem;}
+.g-item:hover .g-overlay{opacity:1;}
+.g-date{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:rgba(255,228,196,.9);}
+.g-icon{position:absolute;top:.9rem;right:.9rem;z-index:4;width:34px;height:34px;background:rgba(255,248,240,.92);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.7) rotate(-10deg);transition:opacity .4s ease,transform .4s ease;border-radius:50%;}
+.g-item:hover .g-icon{opacity:1;transform:scale(1) rotate(0deg);}
+.g-icon svg{width:14px;height:14px;}
+.g-item::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;z-index:5;background:linear-gradient(to right,var(--brown-light),var(--brown));transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.25,.46,.45,.94);}
+.g-item:hover::after{transform:scaleX(1);}
+.gallery-empty{text-align:center;padding:6rem 2rem;font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-style:italic;color:var(--text-light);display:none;}
+
+/* SHOW MORE button */
+.show-more-wrap{text-align:center;padding:2rem 0 5rem;}
+.show-more-btn{
+  font-family:'Jost',sans-serif;font-size:.72rem;font-weight:300;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--brown-dark);
+  background:transparent;border:1px solid rgba(160,82,45,.35);
+  padding:.85rem 2.8rem;cursor:auto !important;
+  transition:background .35s,color .35s,border-color .35s;
+  position:relative;overflow:hidden;
+}
+.show-more-btn::before{content:'';position:absolute;inset:0;background:var(--brown);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:0;}
+.show-more-btn:hover::before{transform:scaleX(1);}
+.show-more-btn:hover{color:var(--white);border-color:var(--brown);}
+.show-more-btn span{position:relative;z-index:1;}
+.show-more-btn.hidden{display:none;}
+
+/* STRIPE */
+.stripe{height:1px;background:linear-gradient(to right,transparent,var(--brown-light),var(--brown),var(--brown-light),transparent);margin:0 4rem 3rem;transform:scaleX(0);transform-origin:left;transition:transform 1.1s ease;}
+.stripe.in{transform:scaleX(1);}
+
+/* ── ABOUT ── */
+.about-band{background:var(--bisque);display:grid;grid-template-columns:1fr 1fr;min-height:70vh;overflow:hidden;}
+.about-img{overflow:hidden;min-height:500px;}
+.about-img img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.06);transition:transform 1.3s ease;}
+.about-img.in img{transform:scale(1);}
+.about-text{padding:6rem 5.5rem 6rem 4.5rem;display:flex;flex-direction:column;justify-content:center;}
+.about-text p{font-size:.92rem;font-weight:200;line-height:2;color:var(--text-mid);margin-top:1.5rem;max-width:420px;}
+.about-quote{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:300;font-style:italic;color:var(--brown-dark);line-height:1.35;margin-top:2.2rem;border-left:2px solid var(--brown-light);padding-left:1.5rem;}
+
+/* ── CONTACT ── */
+.contact-section{padding:7rem 2rem 7rem;text-align:center;}
+.contact-card{max-width:580px;margin:3.5rem auto 0;padding:3.5rem;background:var(--white);border:1px solid rgba(160,82,45,.14);position:relative;overflow:hidden;}
+.contact-card::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(160,82,45,.06),transparent);transform:translateX(-100%);animation:cardShimmer 3.5s 1s infinite ease;pointer-events:none;}
+.contact-card p{font-size:.88rem;font-weight:200;line-height:1.95;color:var(--text-mid);margin-bottom:2.5rem;}
+.social-links{display:flex;flex-direction:column;gap:1rem;align-items:center;}
+.social-btn{display:inline-flex;align-items:center;gap:.9rem;padding:.9rem 2rem;border:1px solid rgba(160,82,45,.22);font-family:'Jost',sans-serif;font-size:.78rem;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:var(--brown-dark);text-decoration:none;transition:all .35s ease;position:relative;overflow:hidden;width:260px;justify-content:center;}
+.social-btn::before{content:'';position:absolute;inset:0;background:var(--brown-dark);transform:scaleX(0);transform-origin:left;transition:transform .35s ease;z-index:0;}
+.social-btn:hover::before{transform:scaleX(1);}
+.social-btn:hover{color:var(--white);border-color:var(--brown-dark);}
+.btn-label,.btn-icon{position:relative;z-index:1;}
+.btn-icon{display:flex;align-items:center;width:20px;height:20px;flex-shrink:0;}
+.btn-icon svg{width:20px;height:20px;}
+
+/* ── FOOTER ── */
+footer{background:var(--text-dark);color:var(--bisque);padding:2.8rem 4rem;display:flex;align-items:center;justify-content:space-between;}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:300;font-style:italic;}
+footer small{font-size:.68rem;letter-spacing:.1em;color:rgba(255,228,196,.4);}
+.footer-links{display:flex;gap:1.5rem;}
+.footer-links a{font-size:.68rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,228,196,.55);text-decoration:none;transition:color .3s;}
+.footer-links a:hover{color:var(--bisque);}
+
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(22,8,2,.97);z-index:1000;align-items:center;justify-content:center;flex-direction:column;}
+.lightbox.open{display:flex;animation:fadeIn .3s ease;}
+.lightbox img{max-height:88vh;max-width:92vw;object-fit:contain;transition:opacity .3s;}
+.lb-close{position:absolute;top:1.8rem;right:2.2rem;font-size:1.3rem;color:var(--bisque);background:none;border:none;cursor:auto !important;opacity:.6;transition:opacity .3s;}
+.lb-close:hover{opacity:1;}
+.lb-caption{margin-top:1.2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.95rem;color:rgba(255,228,196,.5);}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:1px solid rgba(255,228,196,.25);color:var(--bisque);font-size:1.5rem;width:46px;height:46px;display:flex;align-items:center;justify-content:center;cursor:auto !important;transition:all .3s;}
+.lb-nav:hover{background:rgba(255,228,196,.08);border-color:rgba(255,228,196,.6);}
+.lb-prev{left:1.5rem;}.lb-next{right:1.5rem;}
+
+/* ── LOADER ── */
+#loader{position:fixed;inset:0;z-index:9000;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;transition:opacity .7s ease,visibility .7s ease;}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none;}
+.loader-logo{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:300;font-style:italic;color:var(--brown-dark);letter-spacing:.08em;opacity:0;animation:revealUp .8s .1s forwards ease;}
+.loader-line{width:0;height:1px;background:var(--brown-light);animation:growLine 1s .5s forwards ease;}
+
+/* ── KEYFRAMES ── */
+@keyframes revealUp{to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+@keyframes cardShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+@keyframes slideBar{0%{left:-100%}60%{left:100%}100%{left:100%}}
+@keyframes growLine{to{width:80px;}}
+@keyframes rotateSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes rotateSlowR{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+@keyframes pulse{0%,100%{opacity:.06}50%{opacity:.14}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;}
+  .hero-right{min-height:55vh;}
+  .hero-left{padding:7rem 2.5rem 3rem;}
+  .masonry{columns:2;}
+  .about-band{grid-template-columns:1fr;}
+  .about-img{min-height:300px;}
+  .about-text{padding:3.5rem 2rem;}
+  footer{flex-direction:column;gap:1.2rem;text-align:center;}
+}
+@media(max-width:560px){
+  .masonry{columns:1;}
+  .hero-left{padding:6rem 1.5rem 2.5rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="loader-logo">Daria Shevchenko</div><div class="loader-line"></div></div>
+<!-- Mobile fullscreen menu -->
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#gallery" onclick="closeMobileMenu()" data-t="nav_portfolio">Portfolio</a>
+  <a href="#about"   onclick="closeMobileMenu()" data-t="nav_about">About</a>
+  <a href="#contact" onclick="closeMobileMenu()" data-t="nav_contact">Contact</a>
+  <div class="nav-mobile-lang">
+    <button onclick="setLang('en');closeMobileMenu();" id="mlEn">&#127468;&#127463; EN</button>
+    <button onclick="setLang('uk');closeMobileMenu();" id="mlUk">&#127482;&#127462; UK</button>
+    <button onclick="setLang('pl');closeMobileMenu();" id="mlPl">&#127477;&#127473; PL</button>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">Daria <span>Shevchenko</span></a>
+  <!-- Desktop links -->
+  <ul class="nav-links">
+    <li><a href="#gallery" data-t="nav_portfolio">Portfolio</a></li>
+    <li><a href="#about"   data-t="nav_about">About</a></li>
+    <li><a href="#contact" data-t="nav_contact">Contact</a></li>
+    <li>
+      <div class="lang-wrap" id="langWrap">
+        <button class="lang-btn" onclick="toggleLang()">
+          <span id="langLabel">&#127468;&#127463; EN</span>
+          <span class="lang-arrow">&#9660;</span>
+        </button>
+        <div class="lang-drop">
+          <div class="lang-opt active" data-lang="en" onclick="setLang('en')">&#127468;&#127463; English</div>
+          <div class="lang-opt" data-lang="uk" onclick="setLang('uk')">&#127482;&#127462; &#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072;</div>
+          <div class="lang-opt" data-lang="pl" onclick="setLang('pl')">&#127477;&#127473; Polski</div>
+        </div>
+      </div>
+    </li>
+  </ul>
+  <!-- Mobile hamburger -->
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMobileMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow" data-t="hero_eyebrow">Photography by Daria Shevchenko</p>
+    <h1 class="hero-title" data-t="hero_title_h">Capturing<br><em>moments</em><br>that last.</h1>
+    <p class="hero-sub" data-t="hero_sub">Portrait &amp; love story photography based in Warsaw. Every frame tells a story only you can live.</p>
+    <div class="hero-cta">
+      <div class="hero-line"></div>
+      <a href="#gallery" data-t="hero_cta">Explore portfolio</a>
+    </div>
+    <div class="scroll-hint">
+      <span data-t="scroll">Scroll</span>
+      <div class="scroll-bar"></div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-photos" id="heroPhotos"></div>
+    <div class="hero-veil"></div>
+    <div class="hero-art" id="heroArt">
+      <svg viewBox="0 0 600 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <rect width="600" height="900" fill="#FFE4C4"/>
+        <g stroke="#A0522D" stroke-width=".4" opacity=".07">
+          <line x1="100" y1="0" x2="100" y2="900"/><line x1="200" y1="0" x2="200" y2="900"/>
+          <line x1="300" y1="0" x2="300" y2="900"/><line x1="400" y1="0" x2="400" y2="900"/>
+          <line x1="500" y1="0" x2="500" y2="900"/><line x1="0" y1="150" x2="600" y2="150"/>
+          <line x1="0" y1="300" x2="600" y2="300"/><line x1="0" y1="450" x2="600" y2="450"/>
+          <line x1="0" y1="600" x2="600" y2="600"/><line x1="0" y1="750" x2="600" y2="750"/>
+        </g>
+        <line x1="0" y1="0" x2="600" y2="900" stroke="#A0522D" stroke-width=".5" opacity=".09"/>
+        <line x1="600" y1="0" x2="0" y2="900" stroke="#A0522D" stroke-width=".5" opacity=".09"/>
+        <g style="transform-box:fill-box;transform-origin:center;animation:rotateSlow 45s linear infinite">
+          <circle cx="300" cy="450" r="280" fill="none" stroke="#A0522D" stroke-width=".6" opacity=".13"/>
+          <circle cx="300" cy="450" r="230" fill="none" stroke="#A0522D" stroke-width=".5" opacity=".1"/>
+          <circle cx="300" cy="450" r="180" fill="none" stroke="#C4733A" stroke-width=".4" opacity=".09"/>
+        </g>
+        <g style="transform-box:fill-box;transform-origin:center;animation:rotateSlowR 70s linear infinite">
+          <circle cx="300" cy="450" r="330" fill="none" stroke="#C4733A" stroke-width=".5" opacity=".08"/>
+          <circle cx="300" cy="450" r="380" fill="none" stroke="#A0522D" stroke-width=".3" opacity=".06"/>
+        </g>
+        <rect x="205" y="330" width="190" height="240" rx="1" fill="#A0522D" opacity=".055" style="transform-box:fill-box;transform-origin:center;animation:floatY 8s ease-in-out infinite"/>
+        <polygon points="300,180 440,460 160,460" fill="none" stroke="#A0522D" stroke-width=".7" opacity=".1" style="transform-box:fill-box;transform-origin:center;animation:rotateSlow 60s linear infinite"/>
+        <path d="M24,24 L80,24 L80,80" fill="none" stroke="#A0522D" stroke-width="1" opacity=".2"/>
+        <path d="M576,24 L520,24 L520,80" fill="none" stroke="#A0522D" stroke-width="1" opacity=".2"/>
+        <path d="M24,876 L80,876 L80,820" fill="none" stroke="#A0522D" stroke-width="1" opacity=".2"/>
+        <path d="M576,876 L520,876 L520,820" fill="none" stroke="#A0522D" stroke-width="1" opacity=".2"/>
+        <circle cx="160" cy="210" r="5" fill="#A0522D" opacity=".18" style="animation:pulse 4s ease-in-out infinite"/>
+        <circle cx="440" cy="700" r="7" fill="#C4733A" opacity=".15" style="animation:pulse 5s 1s ease-in-out infinite"/>
+        <text x="300" y="490" text-anchor="middle" dominant-baseline="middle" font-family="Georgia,serif" font-size="340" font-style="italic" fill="#A0522D" opacity=".04">D</text>
+        <rect x="60" y="80" width="480" height="740" fill="none" stroke="#A0522D" stroke-width=".5" opacity=".1"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="sec-head">
+    <span class="sec-tag reveal" data-t="gal_tag">Portfolio</span>
+    <h2 class="sec-title reveal" style="transition-delay:.15s" data-t="gal_title_h">Collections &amp; <em>Stories</em></h2>
+  </div>
+  <div class="stripe reveal" style="transition-delay:.3s"></div>
+  <div class="gallery-wrap">
+    <div class="masonry" id="masonry"></div>
+    <p class="gallery-empty" id="galleryEmpty" data-t="gal_empty">No photos yet.</p>
+  </div>
+  <div class="show-more-wrap">
+    <button class="show-more-btn hidden" id="showMoreBtn" onclick="showMore()">
+      <span data-t="show_more">Show more</span>
+    </button>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-band">
+  <div class="about-img reveal-left" id="aboutImg">
+    <img src="photos/about.jpg" alt="Daria Shevchenko" loading="lazy"
+         onerror="this.style.display='none';this.parentElement.style.background='var(--bisque)'">
+  </div>
+  <div class="about-text">
+    <span class="sec-tag reveal" data-t="about_tag">About</span>
+    <h2 class="sec-title reveal" data-t="about_title_h" style="text-align:left;font-size:clamp(2rem,3.5vw,3rem);transition-delay:.1s">The <em>artist</em><br>behind the lens</h2>
+    <p class="reveal" data-t="about_body" style="transition-delay:.2s">I'm Daria — a photographer based in Warsaw with a passion for capturing raw emotion and authentic beauty. My work spans intimate portraits, love stories, and family moments.</p>
+    <blockquote class="about-quote reveal" data-t="about_quote" style="transition-delay:.3s">"I don't just take photos — I preserve feelings."</blockquote>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <span class="sec-tag reveal" data-t="contact_tag">Let's connect</span>
+  <h2 class="sec-title reveal" data-t="contact_title_h" style="transition-delay:.1s">Find me <em>here</em></h2>
+  <div class="contact-card reveal" style="transition-delay:.25s">
+    <p data-t="contact_body">Looking for a photographer who will make you feel comfortable and create images you'll treasure forever? Reach out on Instagram or Threads.</p>
+    <div class="social-links">
+      <a class="social-btn" href="https://www.instagram.com/ddaris.photo?igsh=cnh5dTYyYzZ6bnc4&utm_source=qr" target="_blank" rel="noopener">
+        <span class="btn-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="6" fill="#A0522D"/>
+            <rect x="6.5" y="6.5" width="11" height="11" rx="3.5" stroke="white" stroke-width="1.4" fill="none"/>
+            <circle cx="12" cy="12" r="2.8" stroke="white" stroke-width="1.3" fill="none"/>
+            <circle cx="16.1" cy="7.9" r=".85" fill="white"/>
+          </svg>
+        </span>
+        <span class="btn-label">Instagram</span>
+      </a>
+      <a class="social-btn" href="https://www.threads.com/@ddaris.photo?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener">
+        <span class="btn-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <rect width="24" height="24" rx="6" fill="#A0522D"/>
+            <path fill="white" d="M16.1 11.3c-.1-.1-.3-.1-.4-.2-.1-2-1.2-3.1-3-3.1h-.1c-1.1 0-2 .5-2.6 1.3l.8.6c.4-.6 1-.9 1.8-.9h.1c1.1 0 1.8.7 1.9 1.8-.5-.1-1-.1-1.5-.1-1.5 0-2.5.7-2.5 2 0 1.2 1 2 2.6 2 1.3 0 2.1-.6 2.6-1.6.1.5.2 1 .2 1.6 0 1.6-1.4 2.7-3.1 2.7-2 0-3.5-1.5-3.5-3.5s1.5-3.5 3.5-3.5c.7 0 1.3.2 1.8.5l.6-.8C14.1 7.3 13.1 7 12 7 9.2 7 7 9.2 7 12s2.2 5 5 5c2.3 0 4.1-1.5 4.1-3.8 0-.6-.1-1.2-.2-1.7 0-.1-.1-.2-.1-.3.4.1.7.3 1 .5l.3-1.4z"/>
+          </svg>
+        </span>
+        <span class="btn-label">Threads</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-logo">Daria Shevchenko</div>
+  <small>&#169; <span id="yr"></span> <span data-t="footer_copy">All rights reserved</span></small>
+  <div class="footer-links">
+    <a href="https://www.instagram.com/ddaris.photo?igsh=cnh5dTYyYzZ6bnc4&utm_source=qr" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.threads.com/@ddaris.photo?igshid=NTc4MTIwNjQ2YQ==" target="_blank" rel="noopener">Threads</a>
+  </div>
+</footer>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" onclick="lbClose()">&#10005;</button>
+  <button class="lb-nav lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <img id="lbImg" src="" alt="">
+  <p class="lb-caption" id="lbCap"></p>
+  <button class="lb-nav lb-next" onclick="lbNav(1)">&#8250;</button>
+</div>
+
+<script>
+/* ── TRANSLATIONS ── */
+var T = {
+  en:{
+    nav_portfolio:'Portfolio', nav_about:'About', nav_contact:'Contact',
+    hero_eyebrow:'Photography by Daria Shevchenko',
+    hero_title_h:'Capturing<br><em>moments</em><br>that last.',
+    hero_sub:'Portrait & love story photography based in Warsaw. Every frame tells a story only you can live.',
+    hero_cta:'Explore portfolio', scroll:'Scroll',
+    gal_tag:'Portfolio', gal_title_h:'Collections & <em>Stories</em>', gal_empty:'No photos yet.',
+    show_more:'Show more',
+    about_tag:'About', about_title_h:'The <em>artist</em><br>behind the lens',
+    about_body:"I\u2019m Daria \u2014 a photographer based in Warsaw with a passion for capturing raw emotion and authentic beauty. My work spans intimate portraits, love stories, and family moments.",
+    about_quote:'\u201CI don\u2019t just take photos \u2014 I preserve feelings.\u201D',
+    contact_tag:"Let\u2019s connect", contact_title_h:'Find me <em>here</em>',
+    contact_body:"Looking for a photographer who will make you feel comfortable and create images you\u2019ll treasure forever? Reach out on Instagram or Threads.",
+    footer_copy:'All rights reserved'
+  },
+  uk:{
+    nav_portfolio:'\u041f\u043e\u0440\u0442\u0444\u043e\u043b\u0456\u043e', nav_about:'\u041f\u0440\u043e \u043c\u0435\u043d\u0435', nav_contact:'\u041a\u043e\u043d\u0442\u0430\u043a\u0442',
+    hero_eyebrow:'\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u044f \u0414\u0430\u0440\u0456\u0457 \u0428\u0435\u0432\u0447\u0435\u043d\u043a\u043e',
+    hero_title_h:'\u0417\u0431\u0435\u0440\u0456\u0433\u0430\u044e<br><em>\u043c\u043e\u043c\u0435\u043d\u0442\u0438</em><br>\u043d\u0430\u0437\u0430\u0432\u0436\u0434\u0438.',
+    hero_sub:'\u041f\u043e\u0440\u0442\u0440\u0435\u0442\u043d\u0430 \u0442\u0430 \u043b\u0430\u0432-\u0441\u0442\u043e\u0440\u0456 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u044f \u0443 \u0412\u0430\u0440\u0448\u0430\u0432\u0456.',
+    hero_cta:'\u041f\u0435\u0440\u0435\u0433\u043b\u044f\u043d\u0443\u0442\u0438 \u043f\u043e\u0440\u0442\u0444\u043e\u043b\u0456\u043e', scroll:'\u0413\u043e\u0440\u0442\u0430\u0442\u0438',
+    gal_tag:'\u041f\u043e\u0440\u0442\u0444\u043e\u043b\u0456\u043e', gal_title_h:'\u041a\u043e\u043b\u0435\u043a\u0446\u0456\u0457 \u0442\u0430 <em>\u0406\u0441\u0442\u043e\u0440\u0456\u0457</em>', gal_empty:'\u0424\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0456\u0439 \u043f\u043e\u043a\u0438 \u043d\u0435\u043c\u0430\u0454.',
+    show_more:'\u041f\u043e\u043a\u0430\u0437\u0430\u0442\u0438 \u0431\u0456\u043b\u044c\u0448\u0435',
+    about_tag:'\u041f\u0440\u043e \u043c\u0435\u043d\u0435', about_title_h:'\u041c\u0438\u0442\u0435\u0446\u044c<br><em>\u0437\u0430 \u043e\u0431\u2019\u0454\u043a\u0442\u0438\u0432\u043e\u043c</em>',
+    about_body:'\u042f \u0414\u0430\u0440\u0456\u044f \u2014 \u0444\u043e\u0442\u043e\u0433\u0440\u0430\u0444\u0438\u043d\u044f \u0443 \u0412\u0430\u0440\u0448\u0430\u0432\u0456. \u041f\u043e\u0440\u0442\u0440\u0435\u0442\u0438, \u043b\u0430\u0432-\u0441\u0442\u043e\u0440\u0456, \u0441\u0456\u043c\u0435\u0439\u043d\u0456 \u0437\u0439\u043e\u043c\u043a\u0438.',
+    about_quote:'\u00ab\u042f \u043d\u0435 \u043f\u0440\u043e\u0441\u0442\u043e \u0440\u043e\u0431\u043b\u044e \u0444\u043e\u0442\u043e \u2014 \u044f \u0437\u0431\u0435\u0440\u0456\u0433\u0430\u044e \u043f\u043e\u0447\u0443\u0442\u0442\u044f.\u00bb',
+    contact_tag:"\u0417\u0432'\u044f\u0436\u0456\u0442\u044c\u0441\u044f \u0437\u0456 \u043c\u043d\u043e\u044e", contact_title_h:'\u0417\u043d\u0430\u0439\u0434\u0456\u0442\u044c \u043c\u0435\u043d\u0435 <em>\u0442\u0443\u0442</em>',
+    contact_body:'\u041d\u0430\u043f\u0438\u0448\u0456\u0442\u044c \u0432 Instagram \u0430\u0431\u043e Threads.',
+    footer_copy:'\u0423\u0441\u0456 \u043f\u0440\u0430\u0432\u0430 \u0437\u0430\u0445\u0438\u0449\u0435\u043d\u0456'
+  },
+  pl:{
+    nav_portfolio:'Portfolio', nav_about:'O mnie', nav_contact:'Kontakt',
+    hero_eyebrow:'Fotografia Darii Shevchenko',
+    hero_title_h:'Uwieczniam<br><em>chwile</em><br>na zawsze.',
+    hero_sub:'Fotografia portretowa i love story w Warszawie.',
+    hero_cta:'Zobacz portfolio', scroll:'Przew\u0069\u0144',
+    gal_tag:'Portfolio', gal_title_h:'Kolekcje i <em>Historie</em>', gal_empty:'Brak zdj\u0119\u0107.',
+    show_more:'Poka\u017c wi\u0119cej',
+    about_tag:'O mnie', about_title_h:'Artystka<br><em>za obiektywem</em>',
+    about_body:'Jestem Daria \u2014 fotografka z Warszawy. Portrety, love story, sesje rodzinne.',
+    about_quote:'\u201eNie tylko robi\u0119 zdj\u0119cia \u2014 zachowuj\u0119 uczucia.\u201d',
+    contact_tag:'Po\u0142\u0105czmy si\u0119', contact_title_h:'Znajd\u017a mnie <em>tutaj</em>',
+    contact_body:'Napisz na Instagram lub Threads.',
+    footer_copy:'Wszelkie prawa zastrze\u017cone'
+  }
+};
+var LL = {en:'\uD83C\uDDEC\uD83C\uDDE7 EN', uk:'\uD83C\uDDFA\uD83C\uDDE6 UK', pl:'\uD83C\uDDF5\uD83C\uDDF1 PL'};
+var lang = localStorage.getItem('dlang') || 'en';
+
+function applyLang(l) {
+  lang = l; localStorage.setItem('dlang', l);
+  var t = T[l];
+  document.querySelectorAll('[data-t]').forEach(function(el) {
+    var k = el.dataset.t; if (t[k] !== undefined) el.innerHTML = t[k];
+  });
+  document.getElementById('langLabel').textContent = LL[l];
+  document.querySelectorAll('.lang-opt').forEach(function(o) {
+    o.classList.toggle('active', o.dataset.lang === l);
+  });
+  ['En','Uk','Pl'].forEach(function(c) {
+    var b = document.getElementById('ml'+c);
+    if (b) b.classList.toggle('active', c.toLowerCase() === l);
+  });
+  document.documentElement.lang = l;
+}
+function setLang(l) { applyLang(l); document.getElementById('langWrap').classList.remove('open'); }
+function toggleLang() { document.getElementById('langWrap').classList.toggle('open'); }
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('langWrap').contains(e.target))
+    document.getElementById('langWrap').classList.remove('open');
+});
+
+/* Mobile menu */
+function toggleMobileMenu() {
+  var m = document.getElementById('mobileMenu');
+  var h = document.getElementById('hamburger');
+  var open = m.classList.toggle('open');
+  h.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeMobileMenu() {
+  document.getElementById('mobileMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── GALLERY with pagination ── */
+var PHOTOS = [], lbItems = [], lbIdx = 0;
+var PAGE_SIZE = 12;
+var shownCount = 0;
+
+async function loadPhotos() {
+  try {
+    var r = await fetch('/api/photos');
+    if (!r.ok) throw 0;
+    PHOTOS = await r.json();
+    if (!Array.isArray(PHOTOS)) throw 0;
+  } catch(_) {
+    try {
+      var r2 = await fetch('photos.json');
+      if (!r2.ok) throw 0;
+      PHOTOS = await r2.json();
+    } catch(_) {
+      PHOTOS = [];
+    }
+  }
+  lbItems = PHOTOS;
+  renderHero();
+  renderGallery();
+}
+
+/* Hero: pick 4 random photos */
+function renderHero() {
+  var container = document.getElementById('heroPhotos');
+  var art = document.getElementById('heroArt');
+  if (!container || !art) return;
+
+  if (!PHOTOS || PHOTOS.length < 1) {
+    art.style.opacity = '1';
+    art.style.animation = 'fadeIn 1.4s .5s forwards ease';
+    return;
+  }
+
+  /* hide art */
+  art.style.transition = 'opacity .6s ease';
+  art.style.opacity = '0';
+  art.style.animation = 'none';
+
+  /* pick up to 4 random */
+  var shuffled = PHOTOS.slice().sort(function() { return Math.random() - .5; });
+  var picks = shuffled.slice(0, Math.min(4, shuffled.length));
+
+  container.innerHTML = '';
+  container.classList.add('show');
+
+  picks.forEach(function(p, i) {
+    var cell = document.createElement('div');
+    cell.className = 'hp-cell';
+    var img = document.createElement('img');
+    // Hero mosaic: 400px wide optimized via Vercel
+    img.src = '/_vercel/image?url=' + encodeURIComponent('/' + p.file) + '&w=400&q=80';
+    img.alt = 'photo';
+    img.loading = i === 0 ? 'eager' : 'lazy';
+    img.decoding = 'async';
+    img.addEventListener('load', function() { cell.classList.add('ready'); });
+    img.addEventListener('error', function() { cell.style.background = 'var(--bisque)'; });
+    cell.appendChild(img);
+    container.appendChild(cell);
+  });
+
+  /* first cell spans 2 rows */
+  if (container.firstChild) container.firstChild.style.gridRow = 'span 2';
+
+  setTimeout(function() { container.classList.add('loaded'); }, 300);
+}
+
+/* Gallery: show PAGE_SIZE at a time */
+function renderGallery() {
+  var grid = document.getElementById('masonry');
+  var empty = document.getElementById('galleryEmpty');
+  var btn = document.getElementById('showMoreBtn');
+  grid.innerHTML = '';
+  shownCount = 0;
+
+  if (!PHOTOS.length) { empty.style.display = 'block'; btn.classList.add('hidden'); return; }
+  empty.style.display = 'none';
+
+  appendPhotos();
+}
+
+function appendPhotos() {
+  var grid = document.getElementById('masonry');
+  var btn = document.getElementById('showMoreBtn');
+  var batch = PHOTOS.slice(shownCount, shownCount + PAGE_SIZE);
+
+  batch.forEach(function(p, i) {
+    var idx = shownCount + i;
+    var d = document.createElement('div');
+    d.className = 'g-item';
+    d.style.transitionDelay = Math.min(i, 11) * 55 + 'ms';
+
+    var img = document.createElement('img');
+    // Vercel image optimization: resize to 600px wide, 75% quality — fast loading
+    img.src = '/_vercel/image?url=' + encodeURIComponent('/' + p.file) + '&w=600&q=75';
+    img.alt = 'photo';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.addEventListener('load', function() { d.classList.add('img-loaded'); });
+    img.addEventListener('error', function() {
+      // fallback to original if optimization fails
+      if (img.src.indexOf('_vercel') !== -1) { img.src = p.file; }
+      else { d.style.display = 'none'; }
+    });
+
+    var overlay = document.createElement('div');
+    overlay.className = 'g-overlay';
+    var date = document.createElement('p');
+    date.className = 'g-date'; date.textContent = p.date || '';
+    overlay.appendChild(date);
+
+    var icon = document.createElement('div');
+    icon.className = 'g-icon';
+    icon.innerHTML = '<svg viewBox="0 0 16 16" fill="none"><path d="M3 3h4v1H4v8h8v-3h1v4H3V3z" fill="#7A3B1E"/><path d="M9 3h4v4h-1V4.7L7.4 9.3l-.7-.7L11.3 4H10V3z" fill="#7A3B1E"/></svg>';
+
+    d.appendChild(img); d.appendChild(overlay); d.appendChild(icon);
+    (function(capturedIdx) {
+      d.addEventListener('click', function() { lbOpen(capturedIdx); });
+    })(idx);
+    grid.appendChild(d);
+  });
+
+  shownCount += batch.length;
+
+  /* show/hide button */
+  if (shownCount >= PHOTOS.length) {
+    btn.classList.add('hidden');
+  } else {
+    btn.classList.remove('hidden');
+  }
+
+  observeGallery();
+}
+
+function showMore() {
+  appendPhotos();
+}
+
+/* Lightbox */
+function lbOpen(i) { lbIdx = i; document.getElementById('lightbox').classList.add('open'); lbShow(); }
+function lbShow() {
+  var img = document.getElementById('lbImg');
+  img.style.opacity = '0';
+  // Lightbox: full quality, 1400px wide max
+  img.src = '/_vercel/image?url=' + encodeURIComponent('/' + lbItems[lbIdx].file) + '&w=1400&q=90';
+  img.onload = function() { img.style.opacity = '1'; };
+  document.getElementById('lbCap').textContent = lbItems[lbIdx].date || '';
+}
+function lbClose() { document.getElementById('lightbox').classList.remove('open'); }
+function lbNav(d) { lbIdx = (lbIdx + d + lbItems.length) % lbItems.length; lbShow(); }
+document.getElementById('lightbox').addEventListener('click', function(e) {
+  if (e.target === e.currentTarget) lbClose();
+});
+document.addEventListener('keydown', function(e) {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'Escape') lbClose();
+  if (e.key === 'ArrowLeft') lbNav(-1);
+  if (e.key === 'ArrowRight') lbNav(1);
+});
+
+/* Scroll animations */
+function makeObserver(sel, cls, thr) {
+  cls = cls || 'in'; thr = thr || 0.12;
+  var obs = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add(cls); obs.unobserve(e.target); } });
+  }, {threshold: thr});
+  document.querySelectorAll(sel).forEach(function(el) { obs.observe(el); });
+}
+function observeGallery() {
+  var obs = new IntersectionObserver(function(es) {
+    es.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, {threshold: 0.06});
+  document.querySelectorAll('.g-item:not(.visible)').forEach(function(el) { obs.observe(el); });
+}
+function initAnimations() {
+  makeObserver('.reveal,.reveal-left');
+  makeObserver('.stripe');
+  makeObserver('.about-img');
+  window.addEventListener('scroll', function() {
+    document.getElementById('nav').classList.toggle('scrolled', scrollY > 60);
+    var hl = document.querySelector('.hero-left');
+    if (hl) hl.style.transform = 'translateY(' + Math.min(scrollY * .1, 50) + 'px)';
+  }, {passive: true});
+}
+
+
+
+/* Loader */
+function hideLoader() { var l = document.getElementById('loader'); if (l) l.classList.add('gone'); }
+if (document.readyState === 'complete') { setTimeout(hideLoader, 300); }
+else { window.addEventListener('DOMContentLoaded', function() { setTimeout(hideLoader, 500); }); }
+
+/* Init */
+document.getElementById('yr').textContent = new Date().getFullYear();
+applyLang(lang);
+loadPhotos();
+initAnimations();
+</script>
+</body>
+</html>
