@@ -515,18 +515,31 @@ var shownCount = 0;
 
 async function loadPhotos() {
   try {
-    var r = await fetch('/api/photos');
+    // Cloudinary: fetch all photos from "daria" folder, newest first
+    var cloudName = 'db1xhoyrs';
+    var url = 'https://res.cloudinary.com/' + cloudName + '/image/list/daria.json';
+    var r = await fetch(url);
     if (!r.ok) throw 0;
-    PHOTOS = await r.json();
-    if (!Array.isArray(PHOTOS)) throw 0;
+    var data = await r.json();
+    var resources = data.resources || [];
+    // Sort newest first
+    resources.sort(function(a, b) {
+      return new Date(b.created_at) - new Date(a.created_at);
+    });
+    PHOTOS = resources.map(function(img) {
+      var d = new Date(img.created_at);
+      var month = d.toLocaleString('en', { month: 'short' });
+      var year = d.getFullYear();
+      return {
+        file: 'https://res.cloudinary.com/' + cloudName + '/image/upload/q_auto,f_auto,w_1200/' + img.public_id + '.' + img.format,
+        thumb: 'https://res.cloudinary.com/' + cloudName + '/image/upload/q_auto,f_auto,w_600/' + img.public_id + '.' + img.format,
+        hero: 'https://res.cloudinary.com/' + cloudName + '/image/upload/q_auto,f_auto,w_400/' + img.public_id + '.' + img.format,
+        full: 'https://res.cloudinary.com/' + cloudName + '/image/upload/q_auto,f_auto,w_1600/' + img.public_id + '.' + img.format,
+        date: month + ' ' + year
+      };
+    });
   } catch(_) {
-    try {
-      var r2 = await fetch('photos.json');
-      if (!r2.ok) throw 0;
-      PHOTOS = await r2.json();
-    } catch(_) {
-      PHOTOS = [];
-    }
+    PHOTOS = [];
   }
   lbItems = PHOTOS;
   renderHero();
@@ -561,8 +574,7 @@ function renderHero() {
     var cell = document.createElement('div');
     cell.className = 'hp-cell';
     var img = document.createElement('img');
-    // Hero mosaic: 400px wide optimized via Vercel
-    img.src = '/_vercel/image?url=' + encodeURIComponent('/' + p.file) + '&w=400&q=80';
+    img.src = p.hero || p.file;
     img.alt = 'photo';
     img.loading = i === 0 ? 'eager' : 'lazy';
     img.decoding = 'async';
@@ -604,17 +616,12 @@ function appendPhotos() {
     d.style.transitionDelay = Math.min(i, 11) * 55 + 'ms';
 
     var img = document.createElement('img');
-    // Vercel image optimization: resize to 600px wide, 75% quality — fast loading
-    img.src = '/_vercel/image?url=' + encodeURIComponent('/' + p.file) + '&w=600&q=75';
+    img.src = p.thumb || p.file;
     img.alt = 'photo';
     img.loading = 'lazy';
     img.decoding = 'async';
     img.addEventListener('load', function() { d.classList.add('img-loaded'); });
-    img.addEventListener('error', function() {
-      // fallback to original if optimization fails
-      if (img.src.indexOf('_vercel') !== -1) { img.src = p.file; }
-      else { d.style.display = 'none'; }
-    });
+    img.addEventListener('error', function() { d.style.display = 'none'; });
 
     var overlay = document.createElement('div');
     overlay.className = 'g-overlay';
@@ -654,8 +661,7 @@ function lbOpen(i) { lbIdx = i; document.getElementById('lightbox').classList.ad
 function lbShow() {
   var img = document.getElementById('lbImg');
   img.style.opacity = '0';
-  // Lightbox: full quality, 1400px wide max
-  img.src = '/_vercel/image?url=' + encodeURIComponent('/' + lbItems[lbIdx].file) + '&w=1400&q=90';
+  img.src = lbItems[lbIdx].full || lbItems[lbIdx].file;
   img.onload = function() { img.style.opacity = '1'; };
   document.getElementById('lbCap').textContent = lbItems[lbIdx].date || '';
 }

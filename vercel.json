@@ -1,17 +1,6 @@
 {
   "version": 2,
-  "images": {
-    "domains": [],
-    "sizes": [400, 600, 900, 1400],
-    "formats": ["image/webp", "image/avif"]
-  },
-  "builds": [
-    { "src": "api/photos.js", "use": "@vercel/node" }
-  ],
   "routes": [
-    { "src": "/api/photos", "dest": "/api/photos.js" },
-    { "src": "/photos/(.*)", "dest": "/photos/$1" },
-    { "src": "/(.*\\.(?:jpg|jpeg|png|webp|gif|ico|svg))", "dest": "/$1" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
